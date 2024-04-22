@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using UrlShorter.Domain.Entities;
+﻿using UrlShorter.Domain.Entities;
 
 namespace UrlShorter.Infrastructure.Persistence
 {

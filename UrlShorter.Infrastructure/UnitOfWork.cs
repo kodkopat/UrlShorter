@@ -9,13 +9,10 @@ namespace UrlShorter.Infrastructure
         : IUnitOfWork, IDisposable
     {
         public IUrlRepository Urls { get; init; } = urlRepository;
-
-
         public async Task<int> CompleteAsync()
         {
             return await context.SaveChangesAsync();
         }
-
         public void Dispose()
         {
             context.Dispose();

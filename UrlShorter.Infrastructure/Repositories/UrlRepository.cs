@@ -2,7 +2,7 @@ using UrlShorter.Domain.Entities;
 using UrlShorter.Domain.Interfaces.Repositories;
 using UrlShorter.Infrastructure.Persistence;
 
-namespace hellow.Infrastructure.Repositories
+namespace UrlShorter.Infrastructure.Repositories
 {
     public class UrlRepository(AppDbContext context) : IUrlRepository
     {

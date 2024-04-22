@@ -1,4 +1,3 @@
-using hellow.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using UrlShorter.Application.Services;
 using UrlShorter.Application.Services.Interfaces;
@@ -6,6 +5,7 @@ using UrlShorter.Domain.Interfaces;
 using UrlShorter.Domain.Interfaces.Repositories;
 using UrlShorter.Infrastructure;
 using UrlShorter.Infrastructure.Persistence;
+using UrlShorter.Infrastructure.Repositories;
 
 namespace UrlShorter.Public
 {
