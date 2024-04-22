@@ -9,6 +9,9 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["UrlShorter.Public/UrlShorter.Public.csproj", "UrlShorter.Public/"]
+COPY ["UrlShorter.Application/UrlShorter.Application.csproj", "UrlShorter.Application/"]
+COPY ["UrlShorter.Domain/UrlShorter.Domain.csproj", "UrlShorter.Domain/"]
+COPY ["UrlShorter.Infrastructure/UrlShorter.Infrastructure.csproj", "UrlShorter.Infrastructure/"]
 RUN dotnet restore "./UrlShorter.Public/UrlShorter.Public.csproj"
 COPY . .
 WORKDIR "/src/UrlShorter.Public"

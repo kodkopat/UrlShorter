@@ -1,4 +1,10 @@
+using hellow.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using UrlShorter.Application.Services;
+using UrlShorter.Application.Services.Interfaces;
+using UrlShorter.Domain.Interfaces;
+using UrlShorter.Domain.Interfaces.Repositories;
+using UrlShorter.Infrastructure;
 using UrlShorter.Infrastructure.Persistence;
 
 namespace UrlShorter.Public
@@ -14,6 +20,10 @@ namespace UrlShorter.Public
             {
                 c.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString"));
             });
+
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IUrlRepository, UrlRepository>();
+            builder.Services.AddScoped<IUrlService, UrlService>();
 
             var app = builder.Build();
 
