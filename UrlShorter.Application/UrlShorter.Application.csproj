@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\UrlShorter.Domain\UrlShorter.Domain.csproj" />
+    <ProjectReference Include="..\UrlShorter.Infrastructure\UrlShorter.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

@@ -12,7 +12,7 @@ using UrlShorter.Infrastructure.Persistence;
 namespace UrlShorter.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240423073228_init")]
+    [Migration("20240423190010_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -25,16 +25,33 @@ namespace UrlShorter.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("UrlShorter.Domain.Entities.Urls", b =>
+            modelBuilder.Entity("UrlShorter.Domain.Entities.Clicks", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Count")
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UrlId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserAgentString")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UrlId");
+
+                    b.ToTable("Clicks", (string)null);
+                });
+
+            modelBuilder.Entity("UrlShorter.Domain.Entities.Urls", b =>
+                {
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
@@ -50,6 +67,22 @@ namespace UrlShorter.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Urls", (string)null);
+                });
+
+            modelBuilder.Entity("UrlShorter.Domain.Entities.Clicks", b =>
+                {
+                    b.HasOne("UrlShorter.Domain.Entities.Urls", "Url")
+                        .WithMany("Clicks")
+                        .HasForeignKey("UrlId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Url");
+                });
+
+            modelBuilder.Entity("UrlShorter.Domain.Entities.Urls", b =>
+                {
+                    b.Navigation("Clicks");
                 });
 #pragma warning restore 612, 618
         }

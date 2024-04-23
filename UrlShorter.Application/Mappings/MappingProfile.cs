@@ -9,7 +9,7 @@ namespace UrlShorter.Application.Mappings
     {
         public MappingProfile()
         {
-            CreateMap<Urls, UrlDto>().ReverseMap();
+            CreateMap<Urls, GetUrlDto>().ReverseMap();
         }
     }
 }

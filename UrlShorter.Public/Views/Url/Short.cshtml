@@ -1,24 +1,28 @@
-﻿@model UrlShorter.Application.Dtos.UrlDto
+﻿@model UrlShorter.Application.Dtos.GetUrlDto
 @{
-    ViewData["Title"] = "Short";
+    ViewData["Title"] = "Shortened URL";
 }
 
 <div class="row justify-content-center">
-    <div class="col-8">
+    <div class="col-md-8">
         <div class="card border-secondary mt-5">
-            <div class="card-header">Url Shorter</div>
+            <div class="card-header bg-primary text-white">URL Shortener Result</div>
             <div class="card-body">
-                <span class="card-title">Original Url: <strong>@Model.Url</strong></span>
+
+                <div class="alert alert-success" role="alert">
+                    Your URL has been successfully shortened!
+                </div>
+
+                <div>
+                    <strong>Original URL:</strong> <a href="@Model.Url" target="_blank">@Model.Url</a>
+                </div>
 
                 <div class="input-group mt-3">
                     <label class="input-group-text" for="shortUrlTextBox">Short URL</label>
-
-                    <input type="text" class="form-control" id="shortUrlTextBox" value="@Model.ShortUrl" readonly>
-                    <div class="input-group-append">
-
-                        <button class="btn btn-primary" onclick="copyToClipboard()">Copy</button>
-                    </div>
+                    <input type="text" class="form-control" id="shortUrlTextBox" value="@Model.ShortUrl" readonly />
+                    <button class="btn btn-primary" onclick="copyToClipboard()">Copy</button>
                 </div>
+
             </div>
         </div>
     </div>
@@ -28,10 +32,14 @@
     <script>
         function copyToClipboard() {
             var copyText = document.getElementById("shortUrlTextBox");
-            copyText.select();
-            copyText.setSelectionRange(0, 99999);
-            document.execCommand("copy");
-            alert("Copied the text: " + copyText.value);
+            navigator.clipboard.writeText(copyText.value)
+                .then(() => {
+                    alert("Short URL copied to clipboard!");
+                })
+                .catch((error) => {
+                    console.error("Error copying text: ", error);
+                });
         }
+
     </script>
 }

@@ -16,5 +16,6 @@ namespace UrlShorter.Infrastructure.Persistence
         }
 
         public DbSet<Urls> Urls { get; set; }
+        public DbSet<Clicks> Clicks { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace UrlShorter.Infrastructure.Repositories
         }
         public async Task<Urls?> GetByKeyAsync(string key)
         {
-            return await context.Urls.FirstOrDefaultAsync(c => c.Key.Equals(key));
+            return await context.Urls.Include(c => c.Clicks).FirstOrDefaultAsync(c => c.Key.Equals(key));
         }
         public async Task AddAsync(Urls? url)
         {
@@ -22,10 +22,13 @@ namespace UrlShorter.Infrastructure.Repositories
         {
             return context.Urls.AnyAsync(c => c.Key.Equals(key));
         }
-        public async Task IncreaseCount(string key)
+        public async Task IncreaseCount(string key, string? UserAgentString)
         {
             var item = await GetByKeyAsync(key);
-            item.Count++;
+            item.Clicks.Add(new Clicks
+            {
+                UserAgentString = UserAgentString
+            });
             await context.SaveChangesAsync();
         }
     }

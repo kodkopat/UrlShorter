@@ -11,7 +11,6 @@ namespace UrlShorter.Infrastructure.Persistence.Configurations
             builder.HasKey(p => p.Id);
             builder.Property(p => p.Url).IsRequired();
             builder.Property(p => p.Key).IsRequired();
-            builder.Property(p => p.Count).HasDefaultValue(0);
         }
     }
 }
