@@ -82,10 +82,10 @@ Here are some screenshots from the application to give you a better understandin
    ![Home Page](./1.jpg)
 
 2. **Statistics Page**:
-   ![Statistics Page](./2.jpg)
+   ![Statistics Page](./3.jpg)
 
 3. **Result Page**:
-   ![Result Page](./3.jpg)
+   ![Result Page](./2.jpg)
 
 4. **Shortened URL Page**:
    ![Shortened URL Page](./4.jpg)
