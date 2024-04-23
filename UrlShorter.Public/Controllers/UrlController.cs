@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using UrlShorter.Application.Services.Interfaces;
 using UrlShorter.Infrastructure.Helpers;
 
@@ -36,8 +37,8 @@ namespace UrlShorter.Public.Controllers
         [HttpPost, ActionName("Statistics")]
         public async Task<IActionResult> Statistics_post(string url)
         {
-            var result = await _urlService.Get(url);
-            return View(result);
+            var statistics = await _urlService.GetStatisticsByDayAsync(url);
+            return View(statistics);
         }
     }
 }
