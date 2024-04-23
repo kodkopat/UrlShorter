@@ -1,0 +1,37 @@
+﻿@model UrlShorter.Application.Dtos.UrlDto
+@{
+    ViewData["Title"] = "Short";
+}
+
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div class="card border-secondary mt-5">
+            <div class="card-header">Url Shorter</div>
+            <div class="card-body">
+                <span class="card-title">Original Url: <strong>@Model.Url</strong></span>
+
+                <div class="input-group mt-3">
+                    <label class="input-group-text" for="shortUrlTextBox">Short URL</label>
+
+                    <input type="text" class="form-control" id="shortUrlTextBox" value="@Model.ShortUrl" readonly>
+                    <div class="input-group-append">
+
+                        <button class="btn btn-primary" onclick="copyToClipboard()">Copy</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        function copyToClipboard() {
+            var copyText = document.getElementById("shortUrlTextBox");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            document.execCommand("copy");
+            alert("Copied the text: " + copyText.value);
+        }
+    </script>
+}
