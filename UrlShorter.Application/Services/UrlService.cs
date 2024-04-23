@@ -1,5 +1,6 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using UrlShorter.Application.Dtos;
 using UrlShorter.Application.Services.Interfaces;
 using UrlShorter.Domain.Entities;
@@ -19,7 +20,16 @@ namespace UrlShorter.Application.Services
         private readonly IUrlRepository urlRepository = urlRepository;
         private readonly IMapper mapper = mapper;
         private readonly IHttpContextAccessor httpContext = httpContext;
-
+        public async Task<UrlDto> Get(string key)
+        {
+            var item = await urlRepository.GetByKeyAsync(key);
+            return new UrlDto { Url = item.Url, ShortUrl = $"{httpContext.HttpContext.Request.Host}/{item.Key}", Count = item.Count };
+        }
+        public async Task<UrlDto> GetAndIncreaseCount(string key)
+        {
+            await urlRepository.IncreaseCount(key);
+            return await Get(key);
+        }
         public async Task<UrlDto> Create(string url)
         {
 
@@ -34,14 +44,13 @@ namespace UrlShorter.Application.Services
             await urlRepository.AddAsync(shortUrl);
             await unitOfWork.CompleteAsync();
 
-            return new UrlDto { Url = url, ShortUrl = $"{httpContext.HttpContext.Request.Host}/{uniqueKey}" };
+            return await Get(uniqueKey);
         }
-
         private string GenerateUniqueKey(int length = 6)
         {
             return new string(Enumerable.Repeat(characters, length).Select(s => s[random.Next(s.Length)]).ToArray());
         }
-        public async Task<string> GenerateUniqueKeyAsync(int length = 6)
+        private async Task<string> GenerateUniqueKeyAsync(int length = 6)
         {
             string newKey;
             bool keyExists;

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileSystemGlobbing.Internal;
 using UrlShorter.Application.Services;
 using UrlShorter.Application.Services.Interfaces;
 using UrlShorter.Domain.Interfaces;
@@ -40,7 +41,10 @@ namespace UrlShorter.Public
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
-
+            app.MapControllerRoute(
+            name: "ShortUrl",
+            pattern: "{key}",
+            defaults: new { controller = "Url", action = "RedirectUrl" });
             UpdateDatabase(app);
             app.Run();
 

@@ -11,7 +11,7 @@
                 <form method="post" action="@Url.Action("short","url")">
                     @Html.AntiForgeryToken()
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="example: https://yoururl.com">
+                        <input type="text" name="url" class="form-control" placeholder="example: https://yoururl.com">
                         <button class="btn btn-primary" type="submit" id="button-addon2">Short It!</button>
                     </div>
                 </form>
