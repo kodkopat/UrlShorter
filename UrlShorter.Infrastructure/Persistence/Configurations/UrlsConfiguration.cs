@@ -10,8 +10,8 @@ namespace UrlShorter.Infrastructure.Persistence.Configurations
             builder.ToTable("Urls");
             builder.HasKey(p => p.Id);
             builder.Property(p => p.Url).IsRequired();
-            builder.Property(p => p.ShortUrl).IsRequired();
-            builder.Property(p => p.Coubt).HasDefaultValue(0);
+            builder.Property(p => p.Key).IsRequired();
+            builder.Property(p => p.Count).HasDefaultValue(0);
         }
     }
 }

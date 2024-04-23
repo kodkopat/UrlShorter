@@ -1,44 +1,57 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using UrlShorter.Application.Dtos;
 using UrlShorter.Application.Services.Interfaces;
 using UrlShorter.Domain.Entities;
 using UrlShorter.Domain.Interfaces;
+using UrlShorter.Domain.Interfaces.Repositories;
 
 namespace UrlShorter.Application.Services
 {
-    public class UrlService(IUnitOfWork unitOfWork, IMapper mapper) : IUrlService
+    public class UrlService(IUnitOfWork unitOfWork,
+                            IUrlRepository urlRepository,
+                            IMapper mapper,
+                            IHttpContextAccessor httpContext) : IUrlService
     {
-        public async Task<IEnumerable<UrlDto>> GetAllProductsAsync()
-        {
-            var url = await unitOfWork.Urls.GetAllAsync();
-            return mapper.Map<IEnumerable<UrlDto>>(url);
-        }
-        public async Task<UrlDto> GetProductByIdAsync(Guid id)
-        {
-            var url = await unitOfWork.Urls.GetByIdAsync(id);
-            return mapper.Map<UrlDto>(url);
-        }
-        public async Task<UrlDto> AddProductAsync(UrlDto urlDto)
-        {
-            var url = mapper.Map<Urls>(urlDto);
-            await unitOfWork.Urls.AddAsync(url);
-            await unitOfWork.CompleteAsync();
-            urlDto.Id = url.Id;
-            return urlDto;
-        }
-        public async Task UpdateProductAsync(UrlDto urlDto)
-        {
-            var existingUrl = await unitOfWork.Urls.GetByIdAsync(urlDto.Id);
-            if (existingUrl == null) throw new KeyNotFoundException("Url not found.");
+        private static readonly Random random = new Random();
+        private static readonly string characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        private readonly IUnitOfWork unitOfWork = unitOfWork;
+        private readonly IUrlRepository urlRepository = urlRepository;
+        private readonly IMapper mapper = mapper;
+        private readonly IHttpContextAccessor httpContext = httpContext;
 
-            mapper.Map(urlDto, existingUrl);
-            await unitOfWork.Urls.UpdateAsync(existingUrl);
-            await unitOfWork.CompleteAsync();
-        }
-        public async Task DeleteProductAsync(Guid id)
+        public async Task<UrlDto> Create(string url)
         {
-            await unitOfWork.Urls.DeleteAsync(id);
+
+            var uniqueKey = await GenerateUniqueKeyAsync();
+            var shortUrl = new Urls
+            {
+                Url = url,
+                Key = uniqueKey,
+                Count = 0
+            };
+
+            await urlRepository.AddAsync(shortUrl);
             await unitOfWork.CompleteAsync();
+
+            return new UrlDto { Url = url, ShortUrl = $"{httpContext.HttpContext.Request.Host}/{uniqueKey}" };
+        }
+
+        private string GenerateUniqueKey(int length = 6)
+        {
+            return new string(Enumerable.Repeat(characters, length).Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+        public async Task<string> GenerateUniqueKeyAsync(int length = 6)
+        {
+            string newKey;
+            bool keyExists;
+            do
+            {
+                newKey = GenerateUniqueKey(length);
+                keyExists = await urlRepository.KeyExistAsync(newKey);
+            }
+            while (keyExists);
+            return newKey;
         }
     }
 }

@@ -9,5 +9,6 @@ namespace UrlShorter.Domain.Interfaces.Repositories
         Task AddAsync(Urls? product);
         Task UpdateAsync(Urls? product);
         Task DeleteAsync(Guid id);
+        Task<bool> KeyExistAsync(string key);
     }
 }

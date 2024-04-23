@@ -2,7 +2,20 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div class="card border-secondary mt-5">
+            <div class="card-header">Url Shorter</div>
+            <div class="card-body">
+                <h4 class="card-title">Enter your url and click "Short It!"</h4>
+                <form method="post" action="@Url.Action("short","url")">
+                    @Html.AntiForgeryToken()
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="example: https://yoururl.com">
+                        <button class="btn btn-primary" type="submit" id="button-addon2">Short It!</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>

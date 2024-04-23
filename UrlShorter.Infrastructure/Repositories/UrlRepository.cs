@@ -31,5 +31,9 @@ namespace UrlShorter.Infrastructure.Repositories
                 await context.SaveChangesAsync();
             }
         }
+        public Task<bool> KeyExistAsync(string key)
+        {
+            return context.Urls.AnyAsync(c => c.Key.Equals(key));
+        }
     }
 }

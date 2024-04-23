@@ -25,6 +25,9 @@ namespace UrlShorter.Public
             builder.Services.AddScoped<IUrlRepository, UrlRepository>();
             builder.Services.AddScoped<IUrlService, UrlService>();
 
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            builder.Services.AddHttpContextAccessor();
+
             var app = builder.Build();
 
             if (!app.Environment.IsDevelopment())
@@ -38,7 +41,16 @@ namespace UrlShorter.Public
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
+            UpdateDatabase(app);
             app.Run();
+
+            static void UpdateDatabase(IHost app)
+            {
+                using var scope = app.Services.CreateScope();
+                var services = scope.ServiceProvider;
+                var dbContext = services.GetRequiredService<AppDbContext>();
+                dbContext.Database.Migrate();
+            }
         }
     }
 }
