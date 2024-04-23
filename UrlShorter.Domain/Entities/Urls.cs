@@ -4,6 +4,6 @@
     {
         public string Url { get; set; }
         public string Key { get; set; }
-        public int Count { get; set; }
+        public HashSet<Clicks> Clicks { get; set; } = new();
     }
 }

@@ -4,17 +4,55 @@
 
 <div class="row justify-content-center">
     <div class="col-8">
-        <div class="card border-secondary mt-5">
-            <div class="card-header">Url Shorter</div>
+        <!-- Intro text and brief explanation -->
+        <div class="text-center mt-3">
+            <h1>Welcome to the URL Shortener App!</h1>
+            <p>Transform long URLs into short, shareable links in just a few clicks. This tool is perfect for simplifying links and making them easy to manage and share.</p>
+        </div>
+
+        <!-- Card with form to shorten URLs -->
+        <div class="card border-secondary mt-4">
+            <div class="card-header">URL Shortener</div>
             <div class="card-body">
-                <h4 class="card-title">Enter your url and click "Short It!"</h4>
-                <form method="post" action="@Url.Action("short","url")">
+                <h4 class="card-title">Enter your URL and click "Short It!"</h4>
+                <form method="post" action="@Url.Action("short", "url")">
                     @Html.AntiForgeryToken()
                     <div class="input-group mb-3">
                         <input type="text" name="url" class="form-control" placeholder="example: https://yoururl.com">
-                        <button class="btn btn-primary" type="submit" id="button-addon2">Short It!</button>
+                        <button class="btn btn-primary" type="submit">Short It!</button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row justify-content-center mt-4">
+    <div class="col-8 text-center">
+
+        <h2 class="mb-4">Why Use Our URL Shortener?</h2>
+
+        <div class="d-flex justify-content-around align-items-center">
+
+            <div class="feature-item">
+                <i class="bi bi-link-45deg" style="font-size: 48px; color: #007bff;"></i>
+                <h5 class="mt-2">Easy Shortening</h5>
+                <p>Create short URLs quickly and easily.</p>
+            </div>
+
+
+            <div class="feature-item">
+                <i class="bi bi-shield-lock-fill" style="font-size: 48px; color: #28a745;"></i>
+                <h5 class="mt-2">Secure Links</h5>
+                <p>Your shortened links are secure and reliable.</p>
+            </div>
+
+            <div class="feature-item">
+                <i class="bi bi-bar-chart-fill" style="font-size: 48px; color: #ff5733;"></i>
+                <h5 class="mt-2">Link Analytics</h5>
+                <p>Track and analyze link usage easily.</p>
             </div>
         </div>
     </div>

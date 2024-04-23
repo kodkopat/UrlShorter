@@ -1,0 +1,30 @@
+﻿@model UrlShorter.Application.Dtos.UrlDto
+@{
+    ViewData["Title"] = "Count";
+}
+
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div class="card border-secondary mt-5">
+            <div class="card-header">Url Shorter Statistics</div>
+            <div class="card-body">
+
+                @if (Model is not { })
+                {
+                    <form method="post" action="@Url.Action("statistics", "url")">
+                        @Html.AntiForgeryToken()
+                        <div class="input-group mb-3">
+                            <input type="text" name="url" class="form-control" placeholder="example: https://yoururl.com">
+                            <button class="btn btn-primary" type="submit">Go!</button>
+                        </div>
+                    </form>
+                }
+                else
+                {
+                    <span class="card-title">Url visit count: <strong>@Model.Count</strong></span>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+

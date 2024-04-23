@@ -8,6 +8,6 @@ namespace UrlShorter.Domain.Interfaces.Repositories
         Task<Urls?> GetByKeyAsync(string key);
         Task AddAsync(Urls? url);
         Task<bool> KeyExistAsync(string key);
-        Task IncreaseCount(string key);
+        Task IncreaseCount(string key, string? UserAgentString);
     }
 }

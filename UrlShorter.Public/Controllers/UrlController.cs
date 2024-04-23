@@ -4,10 +4,10 @@ using UrlShorter.Infrastructure.Helpers;
 
 namespace UrlShorter.Public.Controllers
 {
-    public class UrlController(IUrlService urlService) : Controller
+    public class UrlController(IUrlService urlService, IHttpContextAccessor contextAccessor) : Controller
     {
         private readonly IUrlService _urlService = urlService;
-
+        private readonly IHttpContextAccessor _contextAccessor = contextAccessor;
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Short(string url)
         {
@@ -26,10 +26,17 @@ namespace UrlShorter.Public.Controllers
             var result = await _urlService.GetAndIncreaseCount(key);
             return Redirect(result.Url);
         }
-        [HttpGet,Route("url/count/{key}")]
-        public async Task<IActionResult> Count(string key)
+
+        [HttpGet, ActionName("Statistics")]
+        public async Task<IActionResult> Statistics_get(string key)
         {
-            var result = await _urlService.Get(key);
+           
+            return View();
+        }
+        [HttpPost, ActionName("Statistics")]
+        public async Task<IActionResult> Statistics_post(string url)
+        {
+            var result = await _urlService.Get(url);
             return View(result);
         }
     }

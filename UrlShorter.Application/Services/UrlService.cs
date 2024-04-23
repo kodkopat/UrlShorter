@@ -1,48 +1,46 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using UrlShorter.Application.Dtos;
 using UrlShorter.Application.Services.Interfaces;
 using UrlShorter.Domain.Entities;
 using UrlShorter.Domain.Interfaces;
 using UrlShorter.Domain.Interfaces.Repositories;
+using UrlShorter.Infrastructure.Helpers;
 
 namespace UrlShorter.Application.Services
 {
     public class UrlService(IUnitOfWork unitOfWork,
                             IUrlRepository urlRepository,
-                            IMapper mapper,
                             IHttpContextAccessor httpContext) : IUrlService
     {
         private static readonly Random random = new Random();
         private static readonly string characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        private readonly IUnitOfWork unitOfWork = unitOfWork;
-        private readonly IUrlRepository urlRepository = urlRepository;
-        private readonly IMapper mapper = mapper;
-        private readonly IHttpContextAccessor httpContext = httpContext;
-        public async Task<UrlDto> Get(string key)
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
+        private readonly IUrlRepository _urlRepository = urlRepository;
+        private readonly IHttpContextAccessor _httpContext = httpContext;
+
+        public async Task<UrlDto> Get(string url)
         {
-            var item = await urlRepository.GetByKeyAsync(key);
-            return new UrlDto { Url = item.Url, ShortUrl = $"{httpContext.HttpContext.Request.Host}/{item.Key}", Count = item.Count };
+            var key = UrlHelper.ExtractKeyFromUrl(url);
+            var item = await _urlRepository.GetByKeyAsync(key);
+            return new UrlDto { Url = item.Url, ShortUrl = $"{_httpContext.HttpContext.Request.Host}/{item.Key}", Count = item.Clicks.Count };
         }
         public async Task<UrlDto> GetAndIncreaseCount(string key)
         {
-            await urlRepository.IncreaseCount(key);
+            await _urlRepository.IncreaseCount(key, _httpContext.HttpContext.Request.Headers["User-Agent"].ToString());
             return await Get(key);
         }
         public async Task<UrlDto> Create(string url)
         {
-
             var uniqueKey = await GenerateUniqueKeyAsync();
             var shortUrl = new Urls
             {
                 Url = url,
                 Key = uniqueKey,
-                Count = 0
             };
 
-            await urlRepository.AddAsync(shortUrl);
-            await unitOfWork.CompleteAsync();
+            await _urlRepository.AddAsync(shortUrl);
+            await _unitOfWork.CompleteAsync();
 
             return await Get(uniqueKey);
         }
@@ -57,7 +55,7 @@ namespace UrlShorter.Application.Services
             do
             {
                 newKey = GenerateUniqueKey(length);
-                keyExists = await urlRepository.KeyExistAsync(newKey);
+                keyExists = await _urlRepository.KeyExistAsync(newKey);
             }
             while (keyExists);
             return newKey;
